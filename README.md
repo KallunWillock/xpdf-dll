@@ -1,18 +1,34 @@
-#  PDF to text extractor DLL for VB6 
+#  PDF to text extractor DLL for VBA
 
-A fork of pdftotext from [Xpdf](http://www.xpdfreader.com/ "Xpdf"), modified and compiled as a DLL to allow for text extraction of PDF in VB6.
+A fork of a fork of pdftotext from [Xpdf](http://www.xpdfreader.com/ "Xpdf"), modified by Peter Dey and compiled as a 64-bit DLL to allow for text extraction of PDF in VBA.
 
 # Usage
 ```vb
-Private Declare Function getNumPages Lib "pdftotext.dll" (ByVal lpFileName As String, Optional ByVal lpLogCallbackFunc As Long, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
-Private Declare Function extractText Lib "pdftotext.dll" (ByVal lpFileName As String, ByRef lpTextOutput As Long, Optional ByVal iFirstPage As Integer, Optional ByVal iLastPage As Integer, Optional ByVal lpTextOutEnc As String, Optional ByVal lpLayout As String, Optional ByVal lpLogCallbackFunc As Long, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
+#If VBA7 Then
+  Private Declare PtrSafe Function getNumPages Lib "pdftotext.dll" (ByVal lpFileName As String, Optional ByVal lpLogCallbackFunc As LongPtr, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
+  Private Declare PtrSafe Function extractText Lib "pdftotext.dll" (ByVal lpFileName As String, ByVal lpTextOutput As LongPtr, Optional ByVal iFirstPage As Integer, Optional ByVal iLastPage As Integer, Optional ByVal lpTextOutEnc As String, Optional ByVal lpLayout As String, Optional ByVal lpLogCallbackFunc As LongPtr, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
+#Else
+  Private Declare PtrSafe Function getNumPages Lib "pdftotext.dll" (ByVal lpFileName As String, Optional ByVal lpLogCallbackFunc As LongPtr, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
+  Private Declare PtrSafe Function extractText Lib "pdftotext.dll" (ByVal lpFileName As String, ByVal lpTextOutput As LongPtr, Optional ByVal iFirstPage As Integer, Optional ByVal iLastPage As Integer, Optional ByVal lpTextOutEnc As String, Optional ByVal lpLayout As String, Optional ByVal lpLogCallbackFunc As LongPtr, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
+#End If
 
-Dim strOutput as String
-pages = getNumPages("filename.pdf", AddressOf LogCallback, "pass", "anotherpass")
-ret = extractText("filename.pdf", VarPtr(strOutput), 1, 3, "UTF-8", "rawOrder", AddressOf LogCallback, "pass", "anotherpass")
+Sub Test()
+  Dim strOutput As String, Filename As String, Ret As Integer
+  Filename = "C:\VBA\TestPDF.pdf"
+  Ret = extractText(Fname, VarPtr(strOutput), 1, 3, "UTF-8", "rawOrder", AddressOf LogCallback)
+  Debug.Print StrConv(strOutput, vbUnicode)
+End Sub
+
+Sub Test2()
+  Dim strOutput As String, Filename As String, Pages As Long, Ret As Integer
+  Filename = "C:\VBA\TestPDF.pdf"
+  Pages = getNumPages(Filename)
+  Ret = extractText(Filename, VarPtr(strOutput), 1, Pages \ 2)
+  Debug.Print StrConv(strOutput, vbUnicode)
+End Sub
 
 Public Sub LogCallback(ByVal str As String)
-	Debug.Print "Log: " & str
+  Debug.Print "Log: " & str
 End Sub
 ```
 
