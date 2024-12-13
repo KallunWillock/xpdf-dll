@@ -8,8 +8,11 @@ A fork of a fork of pdftotext from [Xpdf](http://www.xpdfreader.com/ "Xpdf"), mo
   Private Declare PtrSafe Function getNumPages Lib "pdftotext.dll" (ByVal lpFileName As String, Optional ByVal lpLogCallbackFunc As LongPtr, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
   Private Declare PtrSafe Function extractText Lib "pdftotext.dll" (ByVal lpFileName As String, ByVal lpTextOutput As LongPtr, Optional ByVal iFirstPage As Integer, Optional ByVal iLastPage As Integer, Optional ByVal lpTextOutEnc As String, Optional ByVal lpLayout As String, Optional ByVal lpLogCallbackFunc As LongPtr, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
 #Else
-  Private Declare PtrSafe Function getNumPages Lib "pdftotext.dll" (ByVal lpFileName As String, Optional ByVal lpLogCallbackFunc As LongPtr, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
-  Private Declare PtrSafe Function extractText Lib "pdftotext.dll" (ByVal lpFileName As String, ByVal lpTextOutput As LongPtr, Optional ByVal iFirstPage As Integer, Optional ByVal iLastPage As Integer, Optional ByVal lpTextOutEnc As String, Optional ByVal lpLayout As String, Optional ByVal lpLogCallbackFunc As LongPtr, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
+  Private Enum LongPtr
+  [_]
+  End Enum
+  Private Declare Function getNumPages Lib "pdftotext.dll" (ByVal lpFileName As String, Optional ByVal lpLogCallbackFunc As LongPtr, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
+  Private Declare Function extractText Lib "pdftotext.dll" (ByVal lpFileName As String, ByVal lpTextOutput As LongPtr, Optional ByVal iFirstPage As Integer, Optional ByVal iLastPage As Integer, Optional ByVal lpTextOutEnc As String, Optional ByVal lpLayout As String, Optional ByVal lpLogCallbackFunc As LongPtr, Optional ByVal lpOwnerPassword As String, Optional ByVal lpUserPassword As String) As Integer
 #End If
 
 Sub Test()
